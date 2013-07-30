@@ -47,21 +47,23 @@ install()
 uninstall()
 {
 	local name="$1"
+	local rubydir="$RR_PREFIX/rubies/$name"
 
-	rm -rf "$RR_PREFIX/rubies/$name"
+	rm -rf "$rubydir"
 }
 
 use()
 {
 	local name="$1"
 	local rubydir="$RR_PREFIX/rubies/$name"
+	local current = "$RR_PREVIX/current"
 
         if [[ ! -d "$rubydir" ]]; then
                 printf "no such ruby: $name\n" >&2 && exit 1
         fi
 
-        rm -f "$RR_PREFIX/current"
-        ln -s "$rubydir" "$RR_PREFIX/current"
+        rm -f "$current"
+        ln -s "$rubydir" "$current"
         list
 }
 
