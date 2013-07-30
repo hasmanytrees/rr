@@ -31,34 +31,37 @@ install()
 {
 	local url="$1"
 	local name="$2"
-	local builddir="$RR_PREFIX/rubies/$name/src"
+	local rubydir="$RR_PREFIX/rubies/$name"
+	local builddir="$rubydir/src"
 
 	mkdir -p $builddir
 
 	pushd "$builddir" > /dev/null
 	echo "Downloading $url"
 	curl -# $url | tar xz --strip-components=1
-	./configure --prefix="$RR_PREFIX/rubies/$name"
-	PREFIX="$RR_PREFIX/rubies/$name" make && make install
+	./configure --prefix="$rubydir"
+	PREFIX="$rubydir" make && make install
 	popd > /dev/null
 }
 
 uninstall()
 {
 	local name="$1"
+
 	rm -rf "$RR_PREFIX/rubies/$name"
 }
 
 use()
 {
 	local name="$1"
+	local rubydir="$RR_PREFIX/rubies/$name"
 
-        if [[ ! -d "$RR_PREFIX/rubies/$name" ]]; then
+        if [[ ! -d "$rubydir" ]]; then
                 printf "no such ruby: $name\n" >&2 && exit 1
         fi
 
         rm -f "$RR_PREFIX/current"
-        ln -s "$RR_PREFIX/rubies/$name" "$RR_PREFIX/current"
+        ln -s "$rubydir" "$RR_PREFIX/current"
         list
 }
 
@@ -69,19 +72,13 @@ rr()
         else
                 case "$1" in
                         -v|--version)
-                                version
-                                ;;
+                                version ;;
 			install)
-				shift
-				install "$@"
-				;;
+				shift install "$@" ;;
 			uninstall)
-				shift
-				uninstall "$@"
-				;;
+				shift uninstall "$@" ;;
                         *)
-                                use "$@"
-                                ;;
+                                use "$@" ;;
                 esac
         fi
 }
