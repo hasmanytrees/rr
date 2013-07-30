@@ -50,6 +50,13 @@ install()
 }
 
 
+uninstall()
+{
+	local name="$1"
+	rm -rf "$RY_PREFIX/rubies/$name"
+}
+
+
 use()
 {
 	local name="$1"
@@ -78,6 +85,10 @@ rr()
 			install)
 				shift
 				install "$@"
+				;;
+			uninstall)
+				shift
+				uninstall "$@"
 				;;
                         *)
                                 use "$@"
