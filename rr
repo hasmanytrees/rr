@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+
+VERSION="0.0.1"
+RR_PREFIX="/usr/local/lib/rr"
+
+
+version()
+{
+        echo $VERSION
+}
+
+
+current()
+{
+        basename "$(readlink "$RR_PREFIX/current")"
+}
+
+
+
+list()
+{
+        local active=$(current)
+
+        for dir in $RR_PREFIX/rubies/*; do
+                local name=$(basename $dir)
+                if [[ "$name" == "$active" ]]; then
+                        printf "  *  $name\n"
+                else
+                        printf "     $name\n"
+                fi
+        done
+}
+
+
+install()
+{
+	local url="$1"
+	local name="$2"
+	local builddir="$RR_PREFIX/rubies/$name/src"
+
+	mkdir -p $builddir
+
+	pushd "$builddir" > /dev/null
+	echo "Downloading $url"
+	curl -# $url | tar xz --strip-components=1
+	./configure --prefix="$RR_PREFIX/rubies/$name"
+	PREFIX="$RR_PREFIX/rubies/$name" make && make install
+	popd > /dev/null
+}
+
+
+use()
+{
+	local name="$1"
+
+        if [[ ! -d "$RR_PREFIX/rubies/$name" ]]; then
+                printf "no such ruby: $name\n" >&2 && exit 1
+        fi
+
+        rm -f "$RR_PREFIX/current"
+        ln -s "$RR_PREFIX/rubies/$name" "$RR_PREFIX/current"
+        list
+}
+
+
+
+
+rr()
+{
+        if [[ $# == 0 ]]; then
+                list
+        else
+                case "$1" in
+                        -v|--version)
+                                version
+                                ;;
+			install)
+				shift
+				install "$@"
+				;;
+                        *)
+                                use "$@"
+                                ;;
+                esac
+        fi
+
+}
+
+
+rr "$@"
