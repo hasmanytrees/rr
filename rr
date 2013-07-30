@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
 
-
 VERSION="0.0.1"
 RR_PREFIX="/usr/local/lib/rr"
-
 
 version()
 {
         echo $VERSION
 }
 
-
 current()
 {
         basename "$(readlink "$RR_PREFIX/current")"
 }
-
-
 
 list()
 {
@@ -31,7 +26,6 @@ list()
                 fi
         done
 }
-
 
 install()
 {
@@ -49,13 +43,11 @@ install()
 	popd > /dev/null
 }
 
-
 uninstall()
 {
 	local name="$1"
 	rm -rf "$RR_PREFIX/rubies/$name"
 }
-
 
 use()
 {
@@ -69,9 +61,6 @@ use()
         ln -s "$RR_PREFIX/rubies/$name" "$RR_PREFIX/current"
         list
 }
-
-
-
 
 rr()
 {
@@ -95,8 +84,6 @@ rr()
                                 ;;
                 esac
         fi
-
 }
-
 
 rr "$@"
