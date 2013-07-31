@@ -52,7 +52,7 @@ use()
 {
 	local name="$1"
 	local rubydir="$RR_PREFIX/rubies/$name"
-	local current = "$RR_PREVIX/current"
+	local current="$RR_PREVIX/current"
 
         if [[ ! -d "$rubydir" ]]; then
                 printf "no such ruby: $name\n" >&2 && exit 1
