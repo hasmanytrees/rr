@@ -5,22 +5,22 @@ RR_PREFIX="/usr/local/lib/rr"
 
 version()
 {
-        echo $VERSION
+	echo $VERSION
 }
 
 list()
 {
-        local active="$(basename "$(readlink "$RR_PREFIX/current")")"
+	local active="$(basename "$(readlink "$RR_PREFIX/current")")"
 
-        for dir in $RR_PREFIX/rubies/*; do
-                local name="$(basename $dir)"
+	for dir in $RR_PREFIX/rubies/*; do
+		local name="$(basename $dir)"
 
-                if [[ "$name" == "$active" ]]; then
-                        echo "  *  $name"
-                else
-                        echo "     $name"
-                fi
-        done
+		if [[ "$name" == "$active" ]]; then
+			echo "  *  $name"
+		else
+			echo "	 $name"
+		fi
+	done
 }
 
 install()
@@ -54,32 +54,32 @@ use()
 	local rubydir="$RR_PREFIX/rubies/$name"
 	local current="$RR_PREFIX/current"
 
-        if [[ ! -d "$rubydir" ]]; then
-                echo "no such ruby: $name" >&2 && exit 1
-        fi
+	if [[ ! -d "$rubydir" ]]; then
+		echo "no such ruby: $name" >&2 && exit 1
+	fi
 
-        rm -f "$current"
-        ln -s "$rubydir" "$current"
+	rm -f "$current"
+	ln -s "$rubydir" "$current"
 
-        list
+	list
 }
 
 rr()
 {
-        if [[ $# == 0 ]]; then
-                list
-        else
-                case "$1" in
-                        -v|--version)
-                                version ;;
+	if [[ $# == 0 ]]; then
+		list
+	else
+		case "$1" in
+			-v|--version)
+				version ;;
 			install)
 				shift; install "$@" ;;
 			uninstall)
 				shift; uninstall "$@" ;;
-                        *)
-                                use "$@" ;;
-                esac
-        fi
+			*)
+				use "$@" ;;
+		esac
+	fi
 }
 
 rr "$@"
