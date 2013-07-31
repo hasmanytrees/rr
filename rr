@@ -15,7 +15,8 @@ current()
 
 list()
 {
-        local active=$(current)
+        local active=basename "$(readlink "$RR_PREFIX/current")"
+	echo active
 
         for dir in $RR_PREFIX/rubies/*; do
                 local name=$(basename $dir)
