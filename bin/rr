@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION="0.0.2"
+VERSION="0.0.3"
 RR_PREFIX="/usr/local/lib/rr"
 
 version()
@@ -13,11 +13,12 @@ list()
         local active="$(basename "$(readlink "$RR_PREFIX/current")")"
 
         for dir in $RR_PREFIX/rubies/*; do
-                local name=$(basename $dir)
+                local name="$(basename $dir)"
+
                 if [[ "$name" == "$active" ]]; then
-                        printf "  *  $name\n"
+                        echo "  *  $name"
                 else
-                        printf "     $name\n"
+                        echo "     $name"
                 fi
         done
 }
@@ -32,7 +33,7 @@ install()
 	mkdir -p $builddir
 
 	pushd "$builddir" > /dev/null
-	echo "Downloading $url"
+	echo "Downloading $url ..."
 	curl -# $url | tar xz --strip-components=1
 	./configure --prefix="$rubydir"
 	PREFIX="$rubydir" make && make install
@@ -54,11 +55,12 @@ use()
 	local current="$RR_PREFIX/current"
 
         if [[ ! -d "$rubydir" ]]; then
-                printf "no such ruby: $name\n" >&2 && exit 1
+                echo "no such ruby: $name" >&2 && exit 1
         fi
 
         rm -f "$current"
         ln -s "$rubydir" "$current"
+
         list
 }
 
