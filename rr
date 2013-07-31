@@ -8,14 +8,9 @@ version()
         echo $VERSION
 }
 
-current()
-{
-        basename "$(readlink "$RR_PREFIX/current")"
-}
-
 list()
 {
-        local active=basename "$(readlink "$RR_PREFIX/current")"
+        local active="$(basename "$(readlink "$RR_PREFIX/current")")"
 	echo active
 
         for dir in $RR_PREFIX/rubies/*; do
@@ -77,9 +72,9 @@ rr()
                         -v|--version)
                                 version ;;
 			install)
-				shift install "$@" ;;
+				shift; install "$@" ;;
 			uninstall)
-				shift uninstall "$@" ;;
+				shift; uninstall "$@" ;;
                         *)
                                 use "$@" ;;
                 esac
